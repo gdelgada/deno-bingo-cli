@@ -1,8 +1,15 @@
-export function add(a: number, b: number): number {
-	return a + b;
-}
+import {
+	createDrum,
+	getBallRandomly,
+	getFalsePositions,
+} from './services/drum.ts';
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-	console.log('Add 2 + 3 =', add(2, 3));
+	const numberLength = 5;
+	let drum = createDrum(numberLength);
+	while (getFalsePositions(drum).length > 0) {
+		console.log();
+		drum = getBallRandomly(drum);
+		console.log(drum);
+	}
 }
