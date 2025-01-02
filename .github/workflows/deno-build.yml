@@ -1,0 +1,40 @@
+name: Deno Build
+run-name: Deno Build 🚀
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  Check-compile:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Needed to clone the repository
+
+    steps:
+      - name: Setup deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.1.4
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Run linter
+        run: deno lint
+
+      - name: Check format
+        run: deno fmt --check
+
+      - name: Unit tests
+        run: deno test
+
+      - name: Compile
+        run: deno task compile
+
+        
