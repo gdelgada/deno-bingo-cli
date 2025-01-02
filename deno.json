@@ -1,6 +1,11 @@
 {
   "tasks": {
-    "dev": "deno run --watch src/main.ts"
+    "dev": "deno run --watch src/main.ts",
+    "dev-fmt": "deno fmt --watch",
+    "test": "deno test",
+    "coverage": "deno test --coverage & deno coverage --html",
+    "lint": "deno lint",
+    "compile": "deno compile -o output/bingo-cli src/main.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"
