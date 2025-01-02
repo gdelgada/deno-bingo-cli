@@ -2,9 +2,10 @@
   "tasks": {
     "dev": "deno run --watch src/main.ts",
     "dev-fmt": "deno fmt --watch",
+    "lint": "deno lint",
     "test": "deno test",
     "coverage": "deno test --coverage & deno coverage --html",
-    "lint": "deno lint",
+    "check": "deno check src/main.ts",
     "compile": "deno compile -o output/bingo-cli src/main.ts"
   },
   "imports": {
