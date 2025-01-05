@@ -24,15 +24,3 @@ export function getFalsePositions(drum: boolean[]): number[] {
 		[] as number[],
 	);
 }
-
-function getRandomIndex(array: number[]): number {
-	const result = Math.floor(Math.random() * array.length);
-	return result;
-}
-
-export function getBallRandomly(drum: boolean[]): boolean[] {
-	const falsePositions = getFalsePositions(drum);
-	const index = getRandomIndex(falsePositions);
-	console.log('Ball:', falsePositions[index] + 1);
-	return drum = hitDrum(drum, falsePositions[index]);
-}
