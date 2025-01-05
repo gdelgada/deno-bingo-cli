@@ -1,8 +1,4 @@
-import {
-	createDrum,
-	getBallRandomly,
-	getFalsePositions,
-} from './services/drum.ts';
+import { createDrum, getFalsePositions, hitDrum } from './services/drum.ts';
 
 function printDrum(drum: boolean[]) {
 	const columns = 10;
@@ -21,6 +17,11 @@ function printDrum(drum: boolean[]) {
 	console.table(table);
 }
 
+function getRandomIndex(array: number[]): number {
+	const result = Math.floor(Math.random() * array.length);
+	return result;
+}
+
 function play() {
 	try {
 		const drumLengthInput = prompt('Drum length:', '90');
@@ -31,11 +32,17 @@ function play() {
 		let drum = createDrum(drumLength);
 		console.clear();
 		printDrum(drum);
+		console.log('Ball:');
 		while (getFalsePositions(drum).length > 0) {
 			alert('New ball?');
 			console.clear();
-			drum = getBallRandomly(drum);
+
+			const falsePositions = getFalsePositions(drum);
+			const index = getRandomIndex(falsePositions);
+
+			drum = hitDrum(drum, falsePositions[index]);
 			printDrum(drum);
+			console.log('Ball:', falsePositions[index] + 1);
 		}
 	} catch (error) {
 		console.error('Error:', error);
