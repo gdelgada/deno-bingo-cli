@@ -47,7 +47,11 @@ export function printBoard(drum: boolean[]) {
 	console.log('');
 }
 
-export function printStatus(lastNumber: number | null, remaining: number, total: number) {
+export function printStatus(
+	lastNumber: number | null,
+	remaining: number,
+	total: number,
+) {
 	console.log(dim('----------------------------------------'));
 	if (lastNumber !== null) {
 		console.log(bold('Last Ball: ') + bgGreen(black(` ${lastNumber} `)));
