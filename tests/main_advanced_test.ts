@@ -91,7 +91,11 @@ Deno.test({
 			await flushStdin();
 
 			// Verify raw mode was restored despite error
-			assertEquals(rawModeRestored, true, 'Should restore mode even on error');
+			assertEquals(
+				rawModeRestored,
+				true,
+				'Should restore mode even on error',
+			);
 		} finally {
 			Deno.stdin.isTerminal = originalIsTerminal;
 			Deno.stdin.setRaw = originalSetRaw;
@@ -127,7 +131,11 @@ Deno.test({
 			await flushStdin();
 
 			// Should have called read at least once
-			assertEquals(readCallCount >= 1, true, 'Should attempt to read buffer');
+			assertEquals(
+				readCallCount >= 1,
+				true,
+				'Should attempt to read buffer',
+			);
 		} finally {
 			Deno.stdin.isTerminal = originalIsTerminal;
 			Deno.stdin.setRaw = originalSetRaw;
@@ -156,7 +164,10 @@ Deno.test('play: handles invalid drum length input', async () => {
 		};
 
 		// Mock prompt to return invalid input
-		globalThis.prompt = (_message?: string, _defaultValue?: string): string | null => {
+		globalThis.prompt = (
+			_message?: string,
+			_defaultValue?: string,
+		): string | null => {
 			return 'invalid';
 		};
 
@@ -189,7 +200,10 @@ Deno.test('play: handles zero drum length', async () => {
 		};
 
 		// Mock prompt to return zero
-		globalThis.prompt = (_message?: string, _defaultValue?: string): string | null => {
+		globalThis.prompt = (
+			_message?: string,
+			_defaultValue?: string,
+		): string | null => {
 			return '0';
 		};
 
@@ -221,7 +235,10 @@ Deno.test('play: handles negative drum length', async () => {
 		};
 
 		// Mock prompt to return negative number
-		globalThis.prompt = (_message?: string, _defaultValue?: string): string | null => {
+		globalThis.prompt = (
+			_message?: string,
+			_defaultValue?: string,
+		): string | null => {
 			return '-5';
 		};
 
@@ -282,7 +299,11 @@ Deno.test({
 			await play();
 
 			assertEquals(promptCalled, true, 'Prompt should be called');
-			assertEquals(gameStarted, true, 'Game should start with default value');
+			assertEquals(
+				gameStarted,
+				true,
+				'Game should start with default value',
+			);
 		} finally {
 			globalThis.prompt = originalPrompt;
 			console.log = originalConsoleLog;
@@ -300,7 +321,10 @@ Deno.test('play: exits when user types exit', async () => {
 		console.log = () => {};
 
 		let promptCallCount = 0;
-		globalThis.prompt = (message?: string, _defaultValue?: string): string | null => {
+		globalThis.prompt = (
+			message?: string,
+			_defaultValue?: string,
+		): string | null => {
 			promptCallCount++;
 
 			// First call: set drum length

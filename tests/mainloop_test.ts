@@ -55,7 +55,9 @@ Deno.test({
 			assertEquals(confirmCalled, true, 'Confirm should be called');
 			assertEquals(exitCalled, true, 'Exit should be called');
 			assertEquals(
-				logMessages.some((msg) => msg.includes('Welcome to Deno Bingo CLI')),
+				logMessages.some((msg) =>
+					msg.includes('Welcome to Deno Bingo CLI')
+				),
 				true,
 				'Should display welcome message',
 			);
@@ -100,7 +102,10 @@ Deno.test({
 
 			// Mock prompt for the play function
 			let promptCallCount = 0;
-			globalThis.prompt = (_message?: string, _defaultValue?: string): string | null => {
+			globalThis.prompt = (
+				_message?: string,
+				_defaultValue?: string,
+			): string | null => {
 				promptCallCount++;
 				playWasCalled = true;
 

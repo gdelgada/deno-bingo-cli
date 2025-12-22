@@ -22,7 +22,11 @@ Deno.test('getRandomIndex: returns a valid index within array bounds', () => {
 			true,
 			'Index should be < array length',
 		);
-		assertEquals(Number.isInteger(index), true, 'Index should be an integer');
+		assertEquals(
+			Number.isInteger(index),
+			true,
+			'Index should be an integer',
+		);
 	}
 });
 
