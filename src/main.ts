@@ -10,6 +10,43 @@ function getRandomIndex(array: number[]): number {
 	return Math.floor(Math.random() * array.length);
 }
 
+/**
+ * Flushes any pending input from stdin to prevent buffered keypresses
+ * from being processed in subsequent prompts.
+ */
+async function flushStdin(): Promise<void> {
+	if (!Deno.stdin.isTerminal()) return;
+
+	Deno.stdin.setRaw(true);
+
+	try {
+		const buffer = new Uint8Array(1024);
+		// Non-blocking read loop to drain any buffered input
+		const drain = async () => {
+			try {
+				// Read with a short timeout - if nothing is pending, this will return quickly
+				const result = await Promise.race([
+					Deno.stdin.read(buffer),
+					new Promise<null>((resolve) =>
+						setTimeout(() => resolve(null), 20)
+					),
+				]);
+
+				// If we got data, there might be more, so keep draining
+				if (result !== null && result > 0) {
+					await drain();
+				}
+			} catch {
+				// Ignore read errors
+			}
+		};
+
+		await drain();
+	} finally {
+		Deno.stdin.setRaw(false);
+	}
+}
+
 async function play() {
 	try {
 		clearScreen();
@@ -39,7 +76,8 @@ async function play() {
 			printStatus(lastBall, remaining, drumLength);
 
 			if (remaining === 0) {
-				console.log('\nGame Over! All numbers called.\n');
+				console.log('\nGame Over! All numbers called.');
+				prompt('\nPress Enter to return to main menu...');
 				break;
 			}
 
@@ -53,6 +91,9 @@ async function play() {
 
 			console.log('\nRolling...');
 			await new Promise((resolve) => setTimeout(resolve, 600));
+
+			// Flush any pending input that was pressed during the rolling animation
+			await flushStdin();
 
 			const index = getRandomIndex(falsePositions);
 			const actualIndex = falsePositions[index]; // Map back to original index

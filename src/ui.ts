@@ -30,21 +30,29 @@ function centerText(text: string, width: number): string {
 	return ' '.repeat(left) + text + ' '.repeat(right);
 }
 
-function getProgressBar(current: number, total: number, width: number = 40): string {
+function getProgressBar(
+	current: number,
+	total: number,
+	width: number = 40,
+): string {
 	const percentage = current / total;
 	const filledChars = Math.round(percentage * width);
 	const emptyChars = width - filledChars;
-	
+
 	const filled = bgGreen(' '.repeat(filledChars));
 	const empty = gray('░'.repeat(emptyChars));
-	
+
 	return `${filled}${empty} ${Math.round(percentage * 100)}%`;
 }
 
 export function printTitle() {
 	const width = 60;
 	console.log(cyan('╔' + '═'.repeat(width) + '╗'));
-	console.log(cyan('║') + centerText(magenta(bold('  B I N G O   M A S T E R  ')), width) + cyan('║'));
+	console.log(
+		cyan('║') +
+			centerText(magenta(bold('  B I N G O   M A S T E R  ')), width) +
+			cyan('║'),
+	);
 	console.log(cyan('╚' + '═'.repeat(width) + '╝'));
 }
 
@@ -88,16 +96,25 @@ export function printStatus(
 
 	// Draw Big Number Box
 	console.log(yellow('┌' + '─'.repeat(width) + '┐'));
-	
+
 	if (lastNumber !== null) {
 		const numStr = lastNumber.toString().padStart(2, '0');
-		console.log(yellow('│') + centerText(dim('LATEST BALL'), width) + yellow('│'));
-		console.log(yellow('│') + centerText(bgRed(white(bold(`  ${numStr}  `))), width) + yellow('│'));
+		console.log(
+			yellow('│') + centerText(dim('LATEST BALL'), width) + yellow('│'),
+		);
+		console.log(
+			yellow('│') +
+				centerText(bgRed(white(bold(`  ${numStr}  `))), width) +
+				yellow('│'),
+		);
 	} else {
-		console.log(yellow('│') + centerText(dim('WAITING FOR START...'), width) + yellow('│'));
+		console.log(
+			yellow('│') + centerText(dim('WAITING FOR START...'), width) +
+				yellow('│'),
+		);
 		console.log(yellow('│') + centerText(dim(' -- '), width) + yellow('│'));
 	}
-	
+
 	console.log(yellow('└' + '─'.repeat(width) + '┘'));
 
 	// Progress
