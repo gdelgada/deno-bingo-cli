@@ -3,7 +3,9 @@ export function createDrum(length: number): boolean[] {
 }
 
 export function hitDrum(drum: boolean[], index: number): boolean[] {
-	return drum.map((value, i) => i === index ? !value : value);
+	const newDrum = [...drum];
+	newDrum[index] = true;
+	return newDrum;
 }
 
 export function isDrumHit(drum: boolean[], index: number): boolean {
@@ -19,8 +21,11 @@ export function getTrueCount(drum: boolean[]): number {
 }
 
 export function getFalsePositions(drum: boolean[]): number[] {
-	return drum.reduce(
-		(acc, value, i) => !value ? [...acc, i] : acc,
-		[] as number[],
-	);
+	const positions: number[] = [];
+	for (let i = 0; i < drum.length; i++) {
+		if (!drum[i]) {
+			positions.push(i);
+		}
+	}
+	return positions;
 }

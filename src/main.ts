@@ -1,58 +1,83 @@
-import { createDrum, getFalsePositions, hitDrum } from './services/drum.ts';
-
-function printDrum(drum: boolean[]) {
-	const columns = 10;
-	const rows = Math.ceil(drum.length / columns);
-	const table = [];
-
-	for (let i = 0; i < rows; i++) {
-		const rowValues = drum.slice(i * columns, (i + 1) * columns);
-		const row: (number | null | string | undefined)[] = [];
-		for (let index = 0; index < rowValues.length; index++) {
-			const ball = i * columns + index + 1;
-			row.push(rowValues[index] ? ball : '');
-		}
-		table.push(row);
-	}
-	console.table(table);
-}
+import {
+	createDrum,
+	getFalseCount,
+	getFalsePositions,
+	hitDrum,
+} from './services/drum.ts';
+import {
+	clearScreen,
+	printBoard,
+	printStatus,
+	printTitle,
+} from './ui.ts';
 
 function getRandomIndex(array: number[]): number {
-	const result = Math.floor(Math.random() * array.length);
-	return result;
+	return Math.floor(Math.random() * array.length);
 }
 
-function play() {
+async function play() {
 	try {
-		const drumLengthInput = prompt('Drum length:', '90');
-		const drumLength = parseInt(drumLengthInput!);
-		if (isNaN(drumLength)) {
-			throw new Error('The input is not a valid integer.');
+		clearScreen();
+		printTitle();
+		
+		const drumLengthInput = prompt('Enter numbers count (default 90):', '90');
+		const drumLength = parseInt(drumLengthInput || '90', 10);
+		
+		if (isNaN(drumLength) || drumLength <= 0) {
+			console.error('Invalid input. Please enter a positive integer.');
+			return;
 		}
+
 		let drum = createDrum(drumLength);
-		console.clear();
-		printDrum(drum);
-		console.log('Ball:');
-		while (getFalsePositions(drum).length > 0) {
-			alert('New ball?');
-			console.clear();
+		let lastBall: number | null = null;
 
+		while (true) {
 			const falsePositions = getFalsePositions(drum);
-			const index = getRandomIndex(falsePositions);
+			const remaining = falsePositions.length;
+			
+			clearScreen();
+			printTitle();
+			printBoard(drum);
+			printStatus(lastBall, remaining, drumLength);
 
-			drum = hitDrum(drum, falsePositions[index]);
-			printDrum(drum);
-			console.log('Ball:', falsePositions[index] + 1);
+			if (remaining === 0) {
+				console.log('\nGame Over! All numbers called.\n');
+				break;
+			}
+
+			// Wait for user input
+			const answer = prompt('\nPress Enter for next ball (or type "exit" to quit):');
+			if (answer?.toLowerCase() === 'exit') {
+				break;
+			}
+
+			console.log('\nRolling...');
+			await new Promise((resolve) => setTimeout(resolve, 600));
+
+			const index = getRandomIndex(falsePositions);
+			const actualIndex = falsePositions[index]; // Map back to original index
+			
+			drum = hitDrum(drum, actualIndex);
+			lastBall = actualIndex + 1;
 		}
+
 	} catch (error) {
-		console.error('Error:', error);
+		console.error('An error occurred:', error);
 	}
 }
 
 if (import.meta.main) {
 	while (true) {
-		if (confirm('Do you want to play?')) {
-			play();
+		clearScreen();
+		printTitle();
+		console.log('Welcome to Deno Bingo CLI!\n');
+		
+		const shouldPlay = confirm('Do you want to start a new game?');
+		if (!shouldPlay) {
+			console.log('Goodbye!');
+			Deno.exit(0);
 		}
+		
+		await play();
 	}
 }
