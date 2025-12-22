@@ -20,16 +20,17 @@ jobs:
       - name: Setup deno
         uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.1.4
+          deno-version: v2.x
+          cache: true
 
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Run linter
-        run: deno lint
-
       - name: Check format
         run: deno fmt --check
+
+      - name: Run linter
+        run: deno lint
 
       - name: Unit tests
         run: deno test
