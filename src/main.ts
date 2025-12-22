@@ -6,7 +6,7 @@ import {
 } from './services/drum.ts';
 import { clearScreen, printBoard, printStatus, printTitle } from './ui.ts';
 
-function getRandomIndex(array: number[]): number {
+export function getRandomIndex(array: number[]): number {
 	return Math.floor(Math.random() * array.length);
 }
 
@@ -14,7 +14,7 @@ function getRandomIndex(array: number[]): number {
  * Flushes any pending input from stdin to prevent buffered keypresses
  * from being processed in subsequent prompts.
  */
-async function flushStdin(): Promise<void> {
+export async function flushStdin(): Promise<void> {
 	if (!Deno.stdin.isTerminal()) return;
 
 	Deno.stdin.setRaw(true);
@@ -47,7 +47,7 @@ async function flushStdin(): Promise<void> {
 	}
 }
 
-async function play() {
+export async function play() {
 	try {
 		clearScreen();
 		printTitle();
@@ -106,7 +106,10 @@ async function play() {
 	}
 }
 
-if (import.meta.main) {
+/**
+ * Main loop that runs the game menu
+ */
+export async function mainLoop(): Promise<void> {
 	while (true) {
 		clearScreen();
 		printTitle();
@@ -120,4 +123,8 @@ if (import.meta.main) {
 
 		await play();
 	}
+}
+
+if (import.meta.main) {
+	await mainLoop();
 }
